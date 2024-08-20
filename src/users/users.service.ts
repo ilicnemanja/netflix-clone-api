@@ -10,24 +10,8 @@ export class UsersService {
 
   constructor(
     @InjectRepository(User)
-    private usersRepository: Repository<User>,
+    private usersRepository: Repository<User>
   ) {}
-
-  async create(createUserDto: any) {
-    try {
-      const user = this.usersRepository.create(createUserDto);
-      await this.usersRepository.save(user);
-
-      return this.usersRepository.findOne({
-        where: { userId: (user as any)?.userId },
-        // select only the fields we need
-        select: ['userId', 'firstName', 'lastName', 'username', 'email'],
-      });
-    } catch (error) {
-      console.error('An unexpected error occurred:', error.message);
-      throw new Error('An unexpected error occurred');
-    }
-  }
 
   findAll() {
     try {
@@ -60,6 +44,29 @@ export class UsersService {
 
       if (!user) {
         throw new NotFoundException(`User with ID ${id} not found`);
+      }
+
+      return user;
+
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      } else {
+        console.error('An unexpected error occurred:', error.message);
+        throw new Error('An unexpected error occurred');
+      }
+    }
+  }
+
+  async findOneByEmail(email: string) {
+    try {
+      const user = await this.usersRepository.findOne({
+        where: { email },
+        select: ['userId', 'username', 'email', 'password'],
+      });
+
+      if (!user) {
+        throw new NotFoundException(`User with email ${email} not found`);
       }
 
       return user;
