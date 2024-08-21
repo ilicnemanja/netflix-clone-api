@@ -13,16 +13,6 @@ export class UsersService {
     private usersRepository: Repository<User>
   ) {}
 
-  findAll() {
-    try {
-      const users = this.usersRepository.find({ select: ['userId', 'firstName', 'lastName', 'username', 'email'] });
-      return users;
-    } catch (error) {
-      console.error('An unexpected error occurred:', error.message);
-      throw new Error('An unexpected error occurred');
-    }
-  }
-
   async findOne(id: number) {
     try {
       
@@ -62,7 +52,17 @@ export class UsersService {
     try {
       const user = await this.usersRepository.findOne({
         where: { email },
-        select: ['userId', 'username', 'email', 'password'],
+        select: [
+          'userId',
+          'firstName',
+          'lastName',
+          'username',
+          'email',
+          'password',
+          'isActive',
+          'createdAt',
+          'updatedAt',
+        ]
       });
 
       if (!user) {

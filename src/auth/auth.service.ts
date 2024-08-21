@@ -25,7 +25,6 @@ export class AuthService {
             if (user?.password !== pass) {
                 throw new UnauthorizedException("Invalid credentials");
             }
-            const { password, ...result } = user;
             
             const payload = { sub: user.userId, user: user };
 
