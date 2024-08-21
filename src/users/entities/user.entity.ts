@@ -1,5 +1,6 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Subscription } from "src/subscriptions/entities/subscription.entity";
+import { Profile } from "src/profiles/entities/profile.entity";
 
 @Entity()
 export class User {
@@ -32,4 +33,7 @@ export class User {
 
     @ManyToOne(() => Subscription, subscription => subscription.users)
     subscription: Subscription;
+
+    @OneToMany(() => Profile, profile => profile.user)
+    profiles: Profile[];
 }
